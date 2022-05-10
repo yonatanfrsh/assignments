@@ -1,0 +1,44 @@
+<h2>Assignments List</h2>
+<p-table [value]="assignments" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+    <ng-template pTemplate="caption">
+        <p-checkbox [(ngModel)]="showArchive" [binary]="true" (onChange)="showArchiveChanged()" pTooltip="Show Archive" label="With Archive (Total={{countAssignments}})"></p-checkbox>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>StartDate</th>
+            <th>EndDate</th>
+            <th>Repeated</th>
+            <th>Ended</th>
+            <th>Archive</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-assignment>
+        <tr>
+            <td><p-tableCheckbox></p-tableCheckbox></td>
+            <td>{{assignment.id}}</td>
+            <td>{{assignment.assignmentType.name}}</td>
+            <td>{{assignment.name}}</td>
+            <td>{{assignment.description}}</td>
+            <td>{{assignment.startDate | date : 'dd/MM/yyyy'}}</td>
+            <td>{{assignment.endDate | date : 'dd/MM/yyyy'}}</td>
+            <td>{{assignment.repeated}}</td>
+            <td><p-checkbox [value]="assignment" [(ngModel)]="assignment.ended" [binary]="true"></p-checkbox></td>
+            <td>{{assignment.archive}}</td>
+            <td>
+                <span class="p-buttonset">
+                    <button pButton pRipple label="Save" icon="pi pi-check" (click)="saveClicked(assignment)"></button>
+                    <button pButton pRipple label="Delete" icon="pi pi-trash" (click)="deleteClicked(assignment)"></button>
+                    <button pButton pRipple label="Archive" icon="pi pi-trash" (click)="archiveClicked(assignment)"></button>
+                </span>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+    </ng-template>
+</p-table>

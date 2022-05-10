@@ -1,0 +1,32 @@
+<h2>New Assignment</h2>
+<form [formGroup]="newAssignmentForm" (ngSubmit)="newAssignmentSubmit()">
+    <div class="p-fluid grid">
+        <div>
+            <label for="name">Name</label>
+            <input id="name" maxlength="50" type="text" class="form-control" pInputText formControlName="name">
+            <small id="nameRequired-error" class="p-error" *ngIf="name && (name.touched || name.dirty) && name?.errors?.['required']">Name required</small>
+        </div>
+        <div>
+            <label for="typeId">Assignment type</label>
+            <p-dropdown [options]="assignmentTypes" formControlName="typeId" optionLabel="name" optionValue="id"></p-dropdown>
+        </div>
+        <div>
+            <label for="repeated">Repeated Assignment?</label><br />
+            <p-inputSwitch id="repeated" formControlName="repeated"></p-inputSwitch>
+        </div>
+        <div>            
+            <label for="startDate">Start date</label>
+            <p-calendar id="startDate" formControlName="startDate" dateFormat="dd/mm/yy" (onSelect)="startDateSelected()"></p-calendar>
+            <small id="startDate-error" class="p-error" *ngIf="startDate && (startDate.touched || startDate.dirty) && startDate.errors?.['required']">Start date required</small>
+        </div>
+        <div>            
+            <label for="endDate">End date</label>
+            <p-calendar id="endDate" formControlName="endDate" [minDate]="startDate?.value" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+        <div>
+            <label for="description">Description</label>
+            <input id="description" maxlength="400" type="text" pInputText formControlName="description">
+        </div>
+    </div>
+    <button pButton pRipple type="submit" label="Submit"></button>
+</form>

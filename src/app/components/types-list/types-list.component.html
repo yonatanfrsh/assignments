@@ -1,0 +1,17 @@
+<h2>Types List</h2>
+<table *ngIf="data">
+    <thead>
+        <th>ID</th>
+        <th>NAME</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let a of data">
+            <td>
+                {{a.id}}
+            </td>
+            <td>
+                {{a.name}}
+            </td>
+        </tr>
+    </tbody>
+</table>
