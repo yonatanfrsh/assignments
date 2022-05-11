@@ -35,7 +35,7 @@
             <td>{{assignment.repeated}}</td>
             <td><p-checkbox [value]="assignment" [(ngModel)]="assignment.ended" [binary]="true"></p-checkbox></td>
             <td>{{assignment.archive}}</td>
-            <td>
+            <td> 
                 <span class="p-buttonset">
                     <button pButton pRipple label="Save" icon="pi pi-check" (click)="saveClicked(assignment)"></button>
                     <button pButton pRipple label="Delete"class="p-button-danger" icon="pi pi-trash" (click)="deleteClicked(assignment)"></button>
