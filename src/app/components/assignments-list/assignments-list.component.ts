@@ -15,12 +15,20 @@ export class AssignmentsListComponent implements OnInit {
 
   assignments: AssignmentModelView[] = [];
   private assignmentsSubscription: Subscription;
-  public showArchive:boolean = false;
-  public countAssignments:number = 0;
+  public showArchive: boolean = false;
+  public countAssignments: number = 0;
+  public selectedAssignments: any[] = [];
 
-  constructor(private assignmentService: AssignmentService, private datePipe:DatePipe) { }
+
+  constructor(private assignmentService: AssignmentService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
+    this.initCountAssignments();
+    this.initAssignments(this.showArchive);
+  }
+
+
+  initCountAssignments() {
     let self = this;
     this.assignmentService.countAssignments(true).subscribe(
       {
@@ -29,7 +37,6 @@ export class AssignmentsListComponent implements OnInit {
         }
       }
     );
-    this.initAssignments(this.showArchive);
   }
 
   initAssignments(withArchive: boolean) {
@@ -39,14 +46,14 @@ export class AssignmentsListComponent implements OnInit {
       next(result) {
         result.forEach(element => {
           self.assignments.push(new AssignmentModelView(
-            element.id, 
-            element.name, 
-            element.assignmentType, 
-            element.repeated, 
-            element.startDate, 
-            element.endDate, 
+            element.id,
+            element.name,
+            element.assignmentType,
+            element.repeated,
+            element.startDate,
+            element.endDate,
             element.ended,
-            element.description, 
+            element.description,
             element.archive));
         });
         console.log(self.assignments);
@@ -58,53 +65,105 @@ export class AssignmentsListComponent implements OnInit {
 
   showArchiveChanged() {
     this.initAssignments(this.showArchive);
+    this.selectedAssignments = [];
   }
 
-  saveClicked(assignment : AssignmentModelView) {
-    this.assignmentService.assignmentSetEnded(assignment).subscribe({
+  saveClicked(assignment: AssignmentModelView) {
+    var assignmentsMV: AssignmentModelView[] = [assignment];
+    this.setMultipleAssignmentEnded(assignmentsMV);
+  }
+
+  saveSelectedClicked() {
+    console.log(this.selectedAssignments);
+    var assignmentsMV: AssignmentModelView[] = this.selectedAssignments.filter(p => p.id != undefined && p.id != null); // bug select one
+    this.setMultipleAssignmentEnded(assignmentsMV);
+  }
+
+  setMultipleAssignmentEnded(assignmentsMV: AssignmentModelView[]) {
+    let self = this;
+    this.assignmentService.setMultipleAssignmentEnded(assignmentsMV).subscribe({
       next(result) {
         console.log(result);
+        // result.forEach(element => {
+        //   console.log(result);
+        // });
       },
       error(err) {
 
       },
       complete() {
-        
+
       }
     });
   }
 
-  deleteClicked(assignment : AssignmentModelView) {
+  deleteClicked(assignment: AssignmentModelView) {
     let self = this;
     this.assignmentService.deleteAssignmentById(Number(assignment.id)).subscribe({
       next(result) {
         let deleteIndex = self.assignments.findIndex(a => a.id == assignment.id);
         self.assignments.splice(deleteIndex, 1);
+        self.initCountAssignments();
       },
       error(err) {
 
       },
       complete() {
-        
+
       }
     });
   }
 
-  archiveClicked(assignment : AssignmentModelView) {
+  deleteSelectedClicked() {
+    var assignmentsMV: AssignmentModelView[] = this.selectedAssignments.filter(p => p.id != undefined && p.id != null); // bug select one
+    this.deleteMultiple(assignmentsMV);
+  }
+
+  deleteMultiple(assignmentsMV: AssignmentModelView[]) {
     let self = this;
-    this.assignmentService.archiveAssignment(assignment).subscribe({
+    this.assignmentService.deleteMultipleAssignment(assignmentsMV).subscribe({
       next(result) {
-        assignment.archive = true;
-        if (self.showArchive == false) {
-          let deleteIndex = self.assignments.findIndex(a => a.id == assignment.id);
+        result.forEach(element => {
+          let deleteIndex = self.assignments.findIndex(a => a.id == element.id);
           self.assignments.splice(deleteIndex, 1);
-        }
+        });
       },
       error(err) {
 
       },
       complete() {
-        
+
+      }
+    });
+  }
+
+  archiveClicked(assignment: AssignmentModelView) {
+    var assignmentsMV: AssignmentModelView[] = [assignment];
+    this.archiveMultipleAssignment(assignmentsMV);
+  }
+
+  archiveSelectedClicked() {
+    var assignmentsMV: AssignmentModelView[] = this.selectedAssignments.filter(p => p.id != undefined && p.id != null); // bug select one
+    this.archiveMultipleAssignment(assignmentsMV);
+  }
+
+  archiveMultipleAssignment(assignmentsMV: AssignmentModelView[]) {
+    let self = this;
+    this.assignmentService.archiveMultipleAssignment(assignmentsMV).subscribe({
+      next(result) {
+        result.forEach(element => {
+          let archiveIndex = self.assignments.findIndex(a => a.id == element.id);
+          self.assignments[archiveIndex].archive = true;
+          if (self.showArchive == false) {
+            self.assignments.splice(archiveIndex, 1);
+          }
+        });
+      },
+      error(err) {
+
+      },
+      complete() {
+
       }
     });
   }

@@ -1,5 +1,10 @@
 <h2>Assignments List</h2>
-<p-table [value]="assignments" styleClass="p-datatable-gridlines" responsiveLayout="scroll">
+<p-table [value]="assignments"
+        styleClass="p-datatable-gridlines" 
+        responsiveLayout="scroll"
+        [(selection)]="selectedAssignments"
+        dataKey="id"
+        selectionMode="multiple">
     <ng-template pTemplate="caption">
         <p-checkbox [(ngModel)]="showArchive" [binary]="true" (onChange)="showArchiveChanged()" pTooltip="Show Archive" label="With Archive (Total={{countAssignments}})"></p-checkbox>
     </ng-template>
@@ -18,9 +23,9 @@
             <th></th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-assignment>
+    <ng-template pTemplate="body" let-assignment let-rowIndex>
         <tr>
-            <td><p-tableCheckbox></p-tableCheckbox></td>
+            <td><p-tableCheckbox [value]="assignment" [pSelectableRow]="assignments" [pSelectableRowIndex]="rowIndex"></p-tableCheckbox></td>
             <td>{{assignment.id}}</td>
             <td>{{assignment.assignmentType.name}}</td>
             <td>{{assignment.name}}</td>
@@ -33,12 +38,17 @@
             <td>
                 <span class="p-buttonset">
                     <button pButton pRipple label="Save" icon="pi pi-check" (click)="saveClicked(assignment)"></button>
-                    <button pButton pRipple label="Delete" icon="pi pi-trash" (click)="deleteClicked(assignment)"></button>
-                    <button pButton pRipple label="Archive" icon="pi pi-trash" (click)="archiveClicked(assignment)"></button>
+                    <button pButton pRipple label="Delete"class="p-button-danger" icon="pi pi-trash" (click)="deleteClicked(assignment)"></button>
+                    <button pButton pRipple label="Archive" class="p-button-secondary" icon="pi pi-upload" (click)="archiveClicked(assignment)"></button>
                 </span>
             </td>
         </tr>
     </ng-template>
     <ng-template pTemplate="summary">
+        <span class="p-buttonset">
+            <button pButton pRipple label="Save Selected" icon="pi pi-check" (click)="saveSelectedClicked()"></button>
+            <button pButton pRipple label="Delete Selected" class="p-button-danger" icon="pi pi-trash" (click)="deleteSelectedClicked()"></button>
+            <button pButton pRipple label="Archive Selected"  class="p-button-secondary" icon="pi pi-upload" (click)="archiveSelectedClicked()"></button>
+        </span>
     </ng-template>
 </p-table>

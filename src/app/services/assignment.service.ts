@@ -24,15 +24,27 @@ export class AssignmentService {
     return this.http.get<AssignmentModelView[]>(environment.baseUrlApi + `api/Assignments/GetAssignmentsAsync/${withArchive}`);
   }  
 
-  public assignmentSetEnded(assignment: AssignmentModelView) : Observable<Assignment> {
-    return this.http.post<AssignmentModelView>(environment.baseUrlApi + "api/Assignments/AssignmentSetEndedAsync", assignment);
+  // public assignmentSetEnded(assignment: AssignmentModelView) : Observable<Assignment> {
+  //   return this.http.post<AssignmentModelView>(environment.baseUrlApi + "api/Assignments/AssignmentSetEndedAsync", assignment);
+  // }
+   
+  public setMultipleAssignmentEnded(assignmentsMV: AssignmentModelView[]) : Observable<AssignmentModelView[]> {
+    return this.http.post<AssignmentModelView[]>(environment.baseUrlApi + "api/Assignments/SetMultipleAssignmentsEndedAsync", assignmentsMV);
+  }
+
+  public deleteMultipleAssignment(assignmentsMV: AssignmentModelView[]) : Observable<AssignmentModelView[]> {
+    return this.http.post<AssignmentModelView[]>(environment.baseUrlApi + "api/Assignments/DeleteMultipleAssignmentsAsync", assignmentsMV);
   }
 
   public deleteAssignmentById(id : number) : Observable<Assignment> {
     return this.http.delete<AssignmentModelView>(environment.baseUrlApi + `api/Assignments/DeleteAssignmentAsync/${id}`);
   }
 
-  public archiveAssignment(assignment: AssignmentModelView) : Observable<Assignment> {
-    return this.http.post<AssignmentModelView>(environment.baseUrlApi + `api/Assignments/ArchiveAssignmentAsync/`, assignment);
+  // public archiveAssignment(assignment: AssignmentModelView) : Observable<Assignment> {
+  //   return this.http.post<AssignmentModelView>(environment.baseUrlApi + `api/Assignments/ArchiveAssignmentAsync/`, assignment);
+  // }
+
+  public archiveMultipleAssignment(assignmentsMV: AssignmentModelView[]) : Observable<AssignmentModelView[]> {
+    return this.http.post<AssignmentModelView[]>(environment.baseUrlApi + `api/Assignments/ArchiveMultipleAssignmentsAsync/`, assignmentsMV);
   }
 }
